@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">PopularMovies</string>
+    <string name="loading">Loading</string>
+    <string name="logo">Logo</string>
+    <string name="no_data">No Data</string>
+    <string name="movie_cover">Move Cover image</string>
+    <string name="cancel">Cancel</string>
+    <string name="sort">Sort</string>
+    <string name="most_popular">Most Popular</string>
+    <string name="highest_rated">Highest-rated</string>
 </resources>
