@@ -1,5 +1,6 @@
 package me.aratech.popularmovies.activities;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -19,15 +20,17 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import me.aratech.popularmovies.R;
 import me.aratech.popularmovies.adapters.MoviesAdapter;
+import me.aratech.popularmovies.data.Movie;
 import me.aratech.popularmovies.fragments.MoviesFilterSheet;
 import me.aratech.popularmovies.helpers.ApiHelper;
 import me.aratech.popularmovies.helpers.UrlHelper;
 import me.aratech.popularmovies.interfaces.IFilterChangeListener;
+import me.aratech.popularmovies.interfaces.IMovieListIemClickedListener;
 import me.aratech.popularmovies.utils.Constants;
 import me.aratech.popularmovies.webApi.responses.MoviesResponse;
 import okhttp3.Response;
 
-public class MainActivity extends AppCompatActivity implements IFilterChangeListener {
+public class MainActivity extends AppCompatActivity implements IFilterChangeListener, IMovieListIemClickedListener {
 
     /***
      * Vars
@@ -39,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements IFilterChangeList
     /***
      * Views
      */
-    @BindView(R.id.v_loading) View vLoading;
+    @BindView(R.id.v_loading)  View vLoading;
     @BindView(R.id.v_no_data) View vNoData;
     @BindView(R.id.v_data) View vData;
     @BindView(R.id.rv_movies) RecyclerView rvMovies;
@@ -63,25 +66,33 @@ public class MainActivity extends AppCompatActivity implements IFilterChangeList
     }
 
     private void bindUi() {
-        rvMovies.setAdapter(new MoviesAdapter(mResponse));
+        rvMovies.setAdapter(new MoviesAdapter(mResponse, this));
         rvMovies.setHasFixedSize(true);
     }
 
     @OnClick(R.id.fab_filter)
-    void filterFabPressed(View v){
+    void filterFabPressed(View v) {
         MoviesFilterSheet sheet = MoviesFilterSheet.newInstance(mSelectedFilter);
         sheet.show(getSupportFragmentManager(), Constants.TAG_FILTERS);
     }
 
-    @Override public void filterChanged(Constants.SortType newFilter) {
+    @Override
+    public void filterChanged(Constants.SortType newFilter) {
         mSelectedFilter = newFilter;
         new GetMoviesAsync(this)
                 .execute();
     }
 
+    @Override
+    public void movieItemClicked(Movie movie) {
+        Intent intent = new Intent(this, MovieDetailsActivity.class);
+        intent.putExtra(Constants.MOVIE_ITEM, movie);
+        startActivity(intent);
+    }
+
     static class GetMoviesAsync extends AsyncTask<Void, Void, MoviesResponse> {
 
-        private WeakReference<MainActivity> mWeakReference;
+        private final WeakReference<MainActivity> mWeakReference;
 
         GetMoviesAsync(MainActivity activity) {
             mWeakReference = new WeakReference<>(activity);

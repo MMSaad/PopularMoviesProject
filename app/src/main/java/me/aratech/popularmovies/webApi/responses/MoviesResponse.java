@@ -10,7 +10,7 @@ import me.aratech.popularmovies.data.Movie;
 import me.aratech.popularmovies.utils.Constants;
 
 /***
- * Movies Web Methods Reponse
+ * Movies Web Methods Response
  */
 public class MoviesResponse {
 

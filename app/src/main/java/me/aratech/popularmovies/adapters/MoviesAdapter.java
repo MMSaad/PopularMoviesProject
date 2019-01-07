@@ -11,9 +11,11 @@ import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import me.aratech.popularmovies.R;
 import me.aratech.popularmovies.data.Movie;
 import me.aratech.popularmovies.helpers.UrlHelper;
+import me.aratech.popularmovies.interfaces.IMovieListIemClickedListener;
 import me.aratech.popularmovies.webApi.responses.MoviesResponse;
 
 /***
@@ -24,10 +26,12 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
     /***
      * Vars
      */
-    private MoviesResponse mResponse;
+    private final MoviesResponse mResponse;
+    private final IMovieListIemClickedListener mListener;
 
-    public MoviesAdapter(MoviesResponse response) {
+    public MoviesAdapter(MoviesResponse response, IMovieListIemClickedListener listener) {
         mResponse = response;
+        mListener = listener;
     }
 
     @NonNull @Override
@@ -58,6 +62,14 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         MovieViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+        }
+
+        //UI Events
+        @OnClick(R.id.iv_movie_cover)
+        void movieCoverImageClicked(View v){
+            if(mListener != null && mResponse.getMovies().size() > getAdapterPosition()){
+                mListener.movieItemClicked(mResponse.getMovies().get(getAdapterPosition()));
+            }
         }
 
         /***

@@ -13,6 +13,7 @@ import me.aratech.popularmovies.utils.Constants;
  */
 public class UrlHelper {
 
+    public static final String MOVIES_BASE_PATH = "https://www.themoviedb.org/movie/";
     private static final String HTTPS_SCHEMA = "https";
     private static final String BASE_URL_PATH = "api.themoviedb.org/3/movie/";
     private static final String POPULAR_PATH = "popular";

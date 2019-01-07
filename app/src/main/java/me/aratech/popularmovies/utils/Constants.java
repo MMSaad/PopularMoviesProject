@@ -20,12 +20,13 @@ public class Constants {
     public static final String OVERVIEW = "overview";
     public static final String RELEASE_DATE = "release_date";
     public static final String BACKDROP = "backdrop_path";
-    public static final int FILTER_MOST_POPULAR = 0;
-    public static final int FILTER_HIGHEST_RATED = 1;
+
 
 
     public final static String SELECTED_FILTER_FLAG = "selectedFilter";
     public static final String TAG_FILTERS = "Filters";
+    public static final String MOVIE_ITEM = "movieItem";
+    public static final String ORIGINAL_TITLE = "original_title";
 
 
     public enum SortType{

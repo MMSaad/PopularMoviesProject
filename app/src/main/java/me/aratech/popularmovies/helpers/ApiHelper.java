@@ -8,7 +8,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /***
- * Web Api helper to execute web api methds
+ * Web Api helper to execute web api methods
  */
 public class ApiHelper {
 

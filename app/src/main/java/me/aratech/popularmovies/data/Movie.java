@@ -33,6 +33,10 @@ public class Movie implements Serializable {
     private String Title;
 
     @Expose
+    @SerializedName(Constants.ORIGINAL_TITLE)
+    private String OriginalTitle;
+
+    @Expose
     @SerializedName(Constants.POPULARITY)
     private double Popularity;
 
@@ -90,6 +94,10 @@ public class Movie implements Serializable {
 
     public String getBackdrop() {
         return Backdrop;
+    }
+
+    public String getOriginalTitle() {
+        return OriginalTitle;
     }
 }
 
