@@ -23,7 +23,7 @@
 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
+                android:layout_margin="@dimen/text_margin"
                 app:cardElevation="4dp"
                 >
 
@@ -45,7 +45,7 @@
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="@dimen/text_margin">
 
                 <TextView
                     android:id="@+id/tv_movie_name"
@@ -60,8 +60,8 @@
                     android:id="@+id/tv_movie_release_year"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/black"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textStyle="bold"
                     tools:text="2019"/>
 
@@ -86,7 +86,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="@dimen/text_margin">
 
             <TextView
                 style="@style/movie_details_heading"

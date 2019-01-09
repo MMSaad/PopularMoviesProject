@@ -93,6 +93,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         }
 
         //UI Events
+        @SuppressWarnings("unused")
         @OnClick(R.id.iv_movie_cover)
         void movieCoverImageClicked(View v) {
             if (mListener != null && mResponse.getMovies().size() > getAdapterPosition()) {
