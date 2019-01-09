@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements IFilterChangeList
     }
 
     private void bindUi() {
-        rvMovies.setAdapter(new MoviesAdapter(mResponse, this));
+        rvMovies.setAdapter(new MoviesAdapter(mResponse, this,this));
         rvMovies.setHasFixedSize(true);
     }
 
