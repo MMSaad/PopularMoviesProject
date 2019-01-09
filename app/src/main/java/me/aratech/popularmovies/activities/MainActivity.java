@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements IFilterChangeList
     /***
      * Views
      */
-    @BindView(R.id.v_loading)  View vLoading;
+    @BindView(R.id.v_loading) View vLoading;
     @BindView(R.id.v_no_data) View vNoData;
     @BindView(R.id.v_data) View vData;
     @BindView(R.id.rv_movies) RecyclerView rvMovies;
@@ -53,11 +53,20 @@ public class MainActivity extends AppCompatActivity implements IFilterChangeList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        rvMovies.setLayoutManager(new GridLayoutManager(this, getResources().getInteger( R.integer.grid_columns), LinearLayoutManager.VERTICAL, false));
-        new GetMoviesAsync(this)
+        rvMovies.setLayoutManager(new GridLayoutManager(this, getResources().getInteger(R.integer.grid_columns), LinearLayoutManager.VERTICAL, false));
+        if (savedInstanceState != null && savedInstanceState.containsKey(Constants.MOVIES_RESULT)) {
+            mResponse = (MoviesResponse) savedInstanceState.getSerializable(Constants.MOVIES_RESULT);
+        }
+        new GetMoviesAsync(this, mResponse)
                 .execute();
     }
 
+    @Override protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mResponse != null) {
+            outState.putSerializable(Constants.MOVIES_RESULT, mResponse);
+        }
+    }
 
     private void switchLayout(Constants.ViewLayouts layout) {
         vLoading.setVisibility(layout == Constants.ViewLayouts.Loading ? View.VISIBLE : View.GONE);
@@ -66,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements IFilterChangeList
     }
 
     private void bindUi() {
-        rvMovies.setAdapter(new MoviesAdapter(mResponse, this,this));
+        rvMovies.setAdapter(new MoviesAdapter(mResponse, this, this));
         rvMovies.setHasFixedSize(true);
     }
 
@@ -79,9 +88,10 @@ public class MainActivity extends AppCompatActivity implements IFilterChangeList
     @Override
     public void filterChanged(Constants.SortType newFilter) {
         mSelectedFilter = newFilter;
-        new GetMoviesAsync(this)
+        new GetMoviesAsync(this, null)
                 .execute();
     }
+
 
     @Override
     public void movieItemClicked(Movie movie) {
@@ -93,9 +103,11 @@ public class MainActivity extends AppCompatActivity implements IFilterChangeList
     static class GetMoviesAsync extends AsyncTask<Void, Void, MoviesResponse> {
 
         private final WeakReference<MainActivity> mWeakReference;
+        private final MoviesResponse mMoviesResponse;
 
-        GetMoviesAsync(MainActivity activity) {
+        GetMoviesAsync(MainActivity activity, MoviesResponse response) {
             mWeakReference = new WeakReference<>(activity);
+            mMoviesResponse = response;
         }
 
         @Override protected void onPreExecute() {
@@ -124,6 +136,11 @@ public class MainActivity extends AppCompatActivity implements IFilterChangeList
         }
 
         @Override protected MoviesResponse doInBackground(Void... voids) {
+
+            if (mMoviesResponse != null) {
+                return mMoviesResponse;
+            }
+
             MainActivity activity = mWeakReference.get();
             if (activity == null || activity.isFinishing()) {
                 return null;

@@ -27,6 +27,7 @@ public class Constants {
     public static final String TAG_FILTERS = "Filters";
     public static final String MOVIE_ITEM = "movieItem";
     public static final String ORIGINAL_TITLE = "original_title";
+    public static final String MOVIES_RESULT = "MoviesResult";
 
 
     public enum SortType{
