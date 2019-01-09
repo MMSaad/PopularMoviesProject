@@ -24,19 +24,19 @@ import me.aratech.popularmovies.fragments.MoviesFilterSheet;
 import me.aratech.popularmovies.helpers.ApiHelper;
 import me.aratech.popularmovies.helpers.DialogsHelper;
 import me.aratech.popularmovies.helpers.UrlHelper;
-import me.aratech.popularmovies.interfaces.IFilterChangeListener;
 import me.aratech.popularmovies.interfaces.IMovieListIemClickedListener;
+import me.aratech.popularmovies.interfaces.ISortTypeChangeListener;
 import me.aratech.popularmovies.utils.Constants;
 import me.aratech.popularmovies.webApi.responses.MoviesResponse;
 import okhttp3.Response;
 
-public class MainActivity extends AppCompatActivity implements IFilterChangeListener, IMovieListIemClickedListener {
+public class MainActivity extends AppCompatActivity implements ISortTypeChangeListener, IMovieListIemClickedListener {
 
     /***
      * Vars
      */
     private MoviesResponse mResponse;
-    private Constants.SortType mSelectedFilter = Constants.SortType.Popular;
+    private Constants.SortType mSelectedSortType = Constants.SortType.Popular;
 
 
     /***
@@ -54,10 +54,15 @@ public class MainActivity extends AppCompatActivity implements IFilterChangeList
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         rvMovies.setLayoutManager(new GridLayoutManager(this, getResources().getInteger(R.integer.grid_columns), LinearLayoutManager.VERTICAL, false));
-        if (savedInstanceState != null && savedInstanceState.containsKey(Constants.MOVIES_RESULT)) {
-            mResponse = (MoviesResponse) savedInstanceState.getSerializable(Constants.MOVIES_RESULT);
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey(Constants.MOVIES_RESULT)) {
+                mResponse = (MoviesResponse) savedInstanceState.getSerializable(Constants.MOVIES_RESULT);
+            }
+            if (savedInstanceState.containsKey(Constants.SELECTED_SORT_TYPE)) {
+                mSelectedSortType = Constants.SortType.values()[savedInstanceState.getInt(Constants.SELECTED_SORT_TYPE)];
+            }
         }
-        new GetMoviesAsync(this, mResponse, mSelectedFilter)
+        new GetMoviesAsync(this, mResponse, mSelectedSortType)
                 .execute();
     }
 
@@ -66,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements IFilterChangeList
         if (mResponse != null) {
             outState.putSerializable(Constants.MOVIES_RESULT, mResponse);
         }
+        outState.putInt(Constants.SELECTED_SORT_TYPE, mSelectedSortType.ordinal());
     }
 
     private void switchLayout(Constants.ViewLayouts layout) {
@@ -79,20 +85,40 @@ public class MainActivity extends AppCompatActivity implements IFilterChangeList
         rvMovies.setHasFixedSize(true);
     }
 
+    /***
+     * UI Actions
+     */
+
     @SuppressWarnings("unused")
     @OnClick(R.id.fab_filter)
-    void filterFabPressed(View v) {
-        MoviesFilterSheet sheet = MoviesFilterSheet.newInstance(mSelectedFilter);
+    void filterFabClicked(View v) {
+        MoviesFilterSheet sheet = MoviesFilterSheet.newInstance(mSelectedSortType);
         sheet.show(getSupportFragmentManager(), Constants.TAG_FILTERS);
     }
 
-    @Override
-    public void filterChanged(Constants.SortType newFilter) {
-        mSelectedFilter = newFilter;
-        new GetMoviesAsync(this, null, mSelectedFilter)
+    @SuppressWarnings("unused")
+    @OnClick(R.id.btn_retry)
+    void retryButtonClicked(View v) {
+        new GetMoviesAsync(this, null, mSelectedSortType)
                 .execute();
     }
 
+
+    /***
+     * ISortTypeChangeListener implementation
+     */
+
+    @Override
+    public void sortTypeChanged(Constants.SortType sortType) {
+        mSelectedSortType = sortType;
+        new GetMoviesAsync(this, null, mSelectedSortType)
+                .execute();
+    }
+
+
+    /***
+     * IMovieListIemClickedListener implementation
+     */
 
     @Override
     public void movieItemClicked(Movie movie) {
@@ -101,6 +127,10 @@ public class MainActivity extends AppCompatActivity implements IFilterChangeList
         startActivity(intent);
     }
 
+
+    /***
+     * Get Movies List Async task
+     */
     static class GetMoviesAsync extends AsyncTask<Void, Void, MoviesResponse> {
 
         private final WeakReference<MainActivity> mWeakReference;
@@ -134,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements IFilterChangeList
                 activity.switchLayout(Constants.ViewLayouts.Data);
             } else {
                 activity.switchLayout(Constants.ViewLayouts.NoData);
-                DialogsHelper.showToast(activity,R.string.error_fetching_data);
+                DialogsHelper.showToast(activity, R.string.error_fetching_data);
             }
         }
 

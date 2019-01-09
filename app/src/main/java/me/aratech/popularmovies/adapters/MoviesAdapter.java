@@ -57,6 +57,11 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
     }
 
 
+    /***
+     * Start animation for view if it's does not appear before
+     * @param viewToAnimate Target view
+     * @param position View's Adapter position
+     */
     private void setAnimation(View viewToAnimate, int position) {
         if (position > mLastPosition) {
             Animation animation = AnimationUtils.loadAnimation(mActivity, android.R.anim.slide_in_left);
@@ -106,6 +111,9 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
                     .into(ivMovieCover);
         }
 
+        /***
+         * Clear animation
+         */
         void clearAnimation() {
             ivMovieCover.clearAnimation();
         }

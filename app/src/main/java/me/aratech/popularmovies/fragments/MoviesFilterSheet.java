@@ -18,7 +18,7 @@ import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import me.aratech.popularmovies.R;
-import me.aratech.popularmovies.interfaces.IFilterChangeListener;
+import me.aratech.popularmovies.interfaces.ISortTypeChangeListener;
 import me.aratech.popularmovies.utils.Constants;
 
 /***
@@ -36,13 +36,17 @@ public class MoviesFilterSheet extends BottomSheetDialogFragment {
     /***
      * Vars
      */
-    private Constants.SortType mSelectedFilter = Constants.SortType.Popular;
+    private Constants.SortType mSortType = Constants.SortType.Popular;
 
 
+    /***
+     * Create new instance with bundled selected sort type
+     * @param selectedFilter Sort type
+     * @return New Movies Filter sheet fragment
+     */
     public static MoviesFilterSheet newInstance(Constants.SortType selectedFilter) {
-
         Bundle args = new Bundle();
-        args.putInt(Constants.SELECTED_FILTER_FLAG, selectedFilter.ordinal());
+        args.putInt(Constants.SELECTED_SORT_TYPE, selectedFilter.ordinal());
         MoviesFilterSheet fragment = new MoviesFilterSheet();
         fragment.setArguments(args);
         return fragment;
@@ -73,8 +77,8 @@ public class MoviesFilterSheet extends BottomSheetDialogFragment {
         });
 
 
-        if (getArguments() != null && getArguments().get(Constants.SELECTED_FILTER_FLAG) != null) {
-            mSelectedFilter = Constants.SortType.values()[getArguments().getInt(Constants.SELECTED_FILTER_FLAG)];
+        if (getArguments() != null && getArguments().get(Constants.SELECTED_SORT_TYPE) != null) {
+            mSortType = Constants.SortType.values()[getArguments().getInt(Constants.SELECTED_SORT_TYPE)];
             updateUi();
         }
 
@@ -82,8 +86,8 @@ public class MoviesFilterSheet extends BottomSheetDialogFragment {
 
 
     private void updateUi() {
-        rbMostPopular.setChecked(mSelectedFilter == Constants.SortType.Popular);
-        rb_highest_rated.setChecked(mSelectedFilter == Constants.SortType.TopRated);
+        rbMostPopular.setChecked(mSortType == Constants.SortType.Popular);
+        rb_highest_rated.setChecked(mSortType == Constants.SortType.TopRated);
     }
 
     private BottomSheetBehavior.BottomSheetCallback mBottomSheetBehaviorCallback = new BottomSheetBehavior.BottomSheetCallback() {
@@ -104,32 +108,35 @@ public class MoviesFilterSheet extends BottomSheetDialogFragment {
     /***
      * UI Actions
      */
-
-
+    @SuppressWarnings("unused")
     @OnClick(R.id.btnSort)
     void sortButtonPressed(View v) {
-        if (getActivity() != null && getActivity() instanceof IFilterChangeListener) {
-            ((IFilterChangeListener) getActivity())
-                    .filterChanged(mSelectedFilter);
+        if (getActivity() != null && getActivity() instanceof ISortTypeChangeListener) {
+            ((ISortTypeChangeListener) getActivity())
+                    .sortTypeChanged(mSortType);
             dismiss();
         }
     }
 
-    @OnClick(R.id.btnCancel) void buttonCancelPressed(View v) {
+    @SuppressWarnings("unused")
+    @OnClick(R.id.btnCancel)
+    void buttonCancelPressed(View v) {
         dismiss();
     }
 
+    @SuppressWarnings("unused")
     @OnCheckedChanged(R.id.rbMostPopular)
     void mostPopularChecked(CompoundButton compoundButton, boolean isChecked) {
         if (isChecked) {
-            mSelectedFilter = Constants.SortType.Popular;
+            mSortType = Constants.SortType.Popular;
         }
     }
 
+    @SuppressWarnings("unused")
     @OnCheckedChanged(R.id.rb_highest_rated)
     void highestRatedChecked(CompoundButton compoundButton, boolean isChecked) {
         if (isChecked) {
-            mSelectedFilter = Constants.SortType.TopRated;
+            mSortType = Constants.SortType.TopRated;
         }
     }
 

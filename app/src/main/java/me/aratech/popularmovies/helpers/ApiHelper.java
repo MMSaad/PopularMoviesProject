@@ -16,7 +16,7 @@ public class ApiHelper {
      * Get Movies Web API result
      * @param url Web Method Url
      * @return Web API Response
-     * @throws IOException
+     * @throws IOException IO exception if failed to execute the request
      */
     public Response getMoviesResult(URL url) throws IOException {
         OkHttpClient client = new OkHttpClient();

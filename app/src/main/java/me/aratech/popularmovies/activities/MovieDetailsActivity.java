@@ -87,7 +87,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     }
 
 
-    // UI events
+
     @OnClick(R.id.btn_movie_website)
     void movieWebsiteButtonClicked(View v) {
         IntentHelper.openUrl(UrlHelper.MOVIES_BASE_PATH + String.valueOf(mMovie.getId()), this);
