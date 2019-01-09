@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -12,55 +12,113 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/text_margin"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        >
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textStyle="bold"
-            android:text="@string/original_title"/>
-        <TextView
-            android:id="@+id/tv_original_title"
-            android:textColor="@color/black"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textStyle="bold"
-            android:text="@string/overview"/>
-        <TextView
-            android:id="@+id/tv_overview"
-            android:textColor="@color/black"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            <android.support.v7.widget.CardView
+                android:id="@+id/fl_movie_cover"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                app:cardElevation="4dp"
+                >
 
-        <TextView
+                <ImageView
+                    android:id="@+id/iv_movie_cover"
+                    android:layout_width="150dp"
+                    android:layout_height="200dp"
+                    android:layout_gravity="center"
+
+
+                    android:contentDescription="@string/movie_cover"
+                    android:scaleType="fitXY"/>
+            </android.support.v7.widget.CardView>
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/tv_movie_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                    android:textColor="@color/colorAccent"
+                    android:textStyle="bold"
+                    tools:text="Movie Name"/>
+
+                <TextView
+                    android:id="@+id/tv_movie_release_year"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                    android:textStyle="bold"
+                    tools:text="2019"/>
+
+                <TextView
+                    android:id="@+id/tv_movie_rating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    tools:text="9.0/10"/>
+
+                <Button
+                    android:id="@+id/btn_movie_website"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/website"
+                    android:textAllCaps="false"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textStyle="bold"
-            android:text="@string/rating"/>
-        <TextView
-            android:id="@+id/tv_rating"
-            android:textColor="@color/black"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textStyle="bold"
-            android:text="@string/release_date"/>
-        <TextView
-            android:id="@+id/tv_release_date"
-            android:textColor="@color/black"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                style="@style/movie_details_heading"
+                android:text="@string/original_title"
+                />
+
+            <TextView
+                android:id="@+id/tv_original_title"
+                style="@style/movie_details_data"
+                tools:text="Original Name goes here"/>
+
+            <TextView
+                style="@style/movie_details_heading"
+                android:text="@string/overview"
+                />
+
+            <TextView
+                android:id="@+id/tv_overview"
+                style="@style/movie_details_data"
+                tools:text="Overview goes here"/>
+
+
+            <TextView
+                style="@style/movie_details_heading"
+                android:text="@string/release_date"
+                />
+
+            <TextView
+                android:id="@+id/tv_release_date"
+                style="@style/movie_details_data"
+                tools:text="release date goes here"
+                />
+        </LinearLayout>
     </LinearLayout>
 
-</android.support.v4.widget.NestedScrollView>
+</ScrollView>

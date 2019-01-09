@@ -2,6 +2,7 @@ package me.aratech.popularmovies.helpers;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 
 import java.net.URL;
 
@@ -40,6 +41,7 @@ public class UrlHelper {
                     .appendQueryParameter(PAGE_PARAM, String.valueOf(page));
 
             Uri uri = builder.build();
+            Log.v("URL", uri.toString());
             return new URL(uri.toString());
         } catch (Exception e) {
             e.printStackTrace();

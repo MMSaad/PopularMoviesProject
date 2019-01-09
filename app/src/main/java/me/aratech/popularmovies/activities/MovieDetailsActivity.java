@@ -15,6 +15,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import me.aratech.popularmovies.R;
 import me.aratech.popularmovies.data.Movie;
+import me.aratech.popularmovies.helpers.DialogsHelper;
 import me.aratech.popularmovies.helpers.IntentHelper;
 import me.aratech.popularmovies.helpers.UrlHelper;
 import me.aratech.popularmovies.utils.Constants;
@@ -31,9 +32,11 @@ public class MovieDetailsActivity extends AppCompatActivity {
      */
     @BindView(R.id.iv_movie_cover) ImageView ivMovieCover;
     @BindView(R.id.tv_overview) TextView tvOverview;
-    @BindView(R.id.tv_rating) TextView tvRating;
     @BindView(R.id.tv_release_date) TextView tvReleaseDate;
     @BindView(R.id.tv_original_title) TextView tvOriginalTitle;
+    @BindView(R.id.tv_movie_release_year) TextView tvReleaseYear;
+    @BindView(R.id.tv_movie_rating) TextView tvMovieRating;
+    @BindView(R.id.tv_movie_name) TextView tvMovieName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,23 +54,29 @@ public class MovieDetailsActivity extends AppCompatActivity {
             mMovie = (Movie) getIntent().getSerializableExtra(Constants.MOVIE_ITEM);
             bindUi();
         } else {
-            //Show Error Toast
+            DialogsHelper.showToast(this,R.string.unexpected_error);
             finish();
         }
     }
 
+    /***
+     * Bind movie details to UI
+     */
     private void bindUi() {
 
         setTitle(mMovie.getTitle());
+        tvMovieName.setText(mMovie.getTitle());
         tvOriginalTitle.setText(mMovie.getOriginalTitle());
+        tvReleaseYear.setText(mMovie.getReleaseDate().subSequence(0, 4));
+        tvMovieRating.setText(String.format("%s/10", mMovie.getVoteAverage()));
         Picasso
                 .get()
-                .load(UrlHelper.IMAGE_BASE_PATH + mMovie.getBackdrop())
+                .load(UrlHelper.IMAGE_BASE_PATH + mMovie.getPosterPath())
                 .into(ivMovieCover);
         tvOverview.setText(mMovie.getOverview());
-        tvRating.setText(String.valueOf(mMovie.getPopularity()));
         tvReleaseDate.setText(mMovie.getReleaseDate());
     }
+
 
     @Override public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -78,8 +87,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
     }
 
 
-    @OnClick(R.id.fab_webpage)
-    void shareButtonClicked(View v) {
+    // UI events
+    @OnClick(R.id.btn_movie_website)
+    void movieWebsiteButtonClicked(View v) {
         IntentHelper.openUrl(UrlHelper.MOVIES_BASE_PATH + String.valueOf(mMovie.getId()), this);
     }
 }

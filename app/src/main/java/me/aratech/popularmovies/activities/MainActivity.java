@@ -8,7 +8,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -23,6 +22,7 @@ import me.aratech.popularmovies.adapters.MoviesAdapter;
 import me.aratech.popularmovies.data.Movie;
 import me.aratech.popularmovies.fragments.MoviesFilterSheet;
 import me.aratech.popularmovies.helpers.ApiHelper;
+import me.aratech.popularmovies.helpers.DialogsHelper;
 import me.aratech.popularmovies.helpers.UrlHelper;
 import me.aratech.popularmovies.interfaces.IFilterChangeListener;
 import me.aratech.popularmovies.interfaces.IMovieListIemClickedListener;
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements IFilterChangeList
         if (savedInstanceState != null && savedInstanceState.containsKey(Constants.MOVIES_RESULT)) {
             mResponse = (MoviesResponse) savedInstanceState.getSerializable(Constants.MOVIES_RESULT);
         }
-        new GetMoviesAsync(this, mResponse,mSelectedFilter)
+        new GetMoviesAsync(this, mResponse, mSelectedFilter)
                 .execute();
     }
 
@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements IFilterChangeList
         rvMovies.setHasFixedSize(true);
     }
 
+    @SuppressWarnings("unused")
     @OnClick(R.id.fab_filter)
     void filterFabPressed(View v) {
         MoviesFilterSheet sheet = MoviesFilterSheet.newInstance(mSelectedFilter);
@@ -88,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements IFilterChangeList
     @Override
     public void filterChanged(Constants.SortType newFilter) {
         mSelectedFilter = newFilter;
-        new GetMoviesAsync(this, null,mSelectedFilter)
+        new GetMoviesAsync(this, null, mSelectedFilter)
                 .execute();
     }
 
@@ -106,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements IFilterChangeList
         private final MoviesResponse mMoviesResponse;
         private final Constants.SortType mSortType;
 
-        GetMoviesAsync(MainActivity activity, MoviesResponse response,Constants.SortType sortType) {
+        GetMoviesAsync(MainActivity activity, MoviesResponse response, Constants.SortType sortType) {
             mWeakReference = new WeakReference<>(activity);
             mMoviesResponse = response;
             mSortType = sortType;
@@ -133,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements IFilterChangeList
                 activity.switchLayout(Constants.ViewLayouts.Data);
             } else {
                 activity.switchLayout(Constants.ViewLayouts.NoData);
-                Toast.makeText(activity, "Error fetching API, please check your internet connection and try again", Toast.LENGTH_LONG).show();
+                DialogsHelper.showToast(activity,R.string.error_fetching_data);
             }
         }
 
@@ -151,6 +152,10 @@ public class MainActivity extends AppCompatActivity implements IFilterChangeList
             try {
                 URL url = new UrlHelper()
                         .getMoviesUrl(activity, mSortType, 1);
+                if (url == null) {
+                    return null;
+                }
+
                 Response response = new ApiHelper().getMoviesResult(url);
                 if (response != null && response.code() == 200 && response.body() != null) {
                     return new Gson().fromJson(response.body().string(), MoviesResponse.class);
