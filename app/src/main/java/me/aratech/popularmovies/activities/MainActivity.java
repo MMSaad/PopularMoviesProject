@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements IFilterChangeList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        rvMovies.setLayoutManager(new GridLayoutManager(this, 2, LinearLayoutManager.VERTICAL, false));
+        rvMovies.setLayoutManager(new GridLayoutManager(this, getResources().getInteger( R.integer.grid_columns), LinearLayoutManager.VERTICAL, false));
         new GetMoviesAsync(this)
                 .execute();
     }
