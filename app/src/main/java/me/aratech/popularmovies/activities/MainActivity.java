@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements IFilterChangeList
         if (savedInstanceState != null && savedInstanceState.containsKey(Constants.MOVIES_RESULT)) {
             mResponse = (MoviesResponse) savedInstanceState.getSerializable(Constants.MOVIES_RESULT);
         }
-        new GetMoviesAsync(this, mResponse)
+        new GetMoviesAsync(this, mResponse,mSelectedFilter)
                 .execute();
     }
 
@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements IFilterChangeList
     @Override
     public void filterChanged(Constants.SortType newFilter) {
         mSelectedFilter = newFilter;
-        new GetMoviesAsync(this, null)
+        new GetMoviesAsync(this, null,mSelectedFilter)
                 .execute();
     }
 
@@ -104,10 +104,12 @@ public class MainActivity extends AppCompatActivity implements IFilterChangeList
 
         private final WeakReference<MainActivity> mWeakReference;
         private final MoviesResponse mMoviesResponse;
+        private final Constants.SortType mSortType;
 
-        GetMoviesAsync(MainActivity activity, MoviesResponse response) {
+        GetMoviesAsync(MainActivity activity, MoviesResponse response,Constants.SortType sortType) {
             mWeakReference = new WeakReference<>(activity);
             mMoviesResponse = response;
+            mSortType = sortType;
         }
 
         @Override protected void onPreExecute() {
@@ -147,7 +149,8 @@ public class MainActivity extends AppCompatActivity implements IFilterChangeList
             }
 
             try {
-                URL url = new UrlHelper().getMoviesUrl(activity, Constants.SortType.Popular, 1);
+                URL url = new UrlHelper()
+                        .getMoviesUrl(activity, mSortType, 1);
                 Response response = new ApiHelper().getMoviesResult(url);
                 if (response != null && response.code() == 200 && response.body() != null) {
                     return new Gson().fromJson(response.body().string(), MoviesResponse.class);
